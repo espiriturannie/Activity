@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Kodego</title>
+</head>
+<body>
+<?php
+session_start();
+if (!isset($_SESSION['user_id'])) {
+header("Location: login.html");
+}
+?>
+
+<h1>Welcome to Kodego, <?php echo $_SESSION['firstname']; ?>!</h1>
+
+<h2>Your Tweets</h2>
+<?php
+require_once '../api/config.php';
+
+// Get the user's tweets
+$user_id = $_SESSION['user_id'];
+$sql = "SELECT * FROM tweets WHERE user_id='$user_id'";
+$result = mysqli_query($conn, $sql);
+
+if (mysqli_num_rows($result) > 0) {
+    while($row = mysqli_fetch_assoc($result)) {
+        echo "<p>" . $row['tweet'] . "</p>";
+    }
+} else {
+    echo "You have no tweets.";
+}
+?>
+</body>
+</html>
